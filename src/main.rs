@@ -8,6 +8,7 @@ use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use std::time::Duration;
 
+
 fn draw_f(x: i32, y: i32, scale: [i32; 2], f: &Vec<Vec<i32>>, canv: &mut sdl2::render::WindowCanvas){
     let (mut width, mut height) = (scale[0], scale[1]);
     let (mut _x, mut _y) = (0, 0);
@@ -51,11 +52,17 @@ fn main() {
     canvas.set_draw_color(Color::RGB(0, 0, 0));
     canvas.clear();
 
+    let mut exp = 4;
     let mut input: String = String::new();
     match stdin().read_line(&mut input){
         Ok(_) =>{
             let mut input_split = input.split_whitespace();
-            if let (Some(inp_0), Some(inp_1)) = (input_split.next(), input_split.next()){
+            if let (Some(inp_0), Some(inp_1), new_exp) = (input_split.next(), input_split.next(), input_split.next()){
+                if let Some(e) = new_exp{
+                    if let Ok(k) = u32::from_str(e){
+                        exp = k;
+                    }
+                }
                 if let (Ok(a), Ok(b)) =
                        (usize::from_str(inp_0), usize::from_str(inp_1))
                 {
@@ -77,7 +84,7 @@ fn main() {
                         }
                     }
                     canvas.set_draw_color(Color::RGB(0, 255, 0));
-                    draw_f(0, 0, [64, 64], &f, &mut canvas);
+                    draw_f(0, 0, [b.pow(exp) as i32, a.pow(exp) as i32], &f, &mut canvas);
                 }
             }
         }
